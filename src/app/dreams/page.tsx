@@ -2,7 +2,9 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
-import { Star, Heart, MapPin, Utensils, Moon, Sparkles, CheckCircle } from "lucide-react";
+import { Sparkles, CheckCircle, CalendarDays } from "lucide-react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadStarsPreset } from "@tsparticles/preset-stars";
 
 // Floating wishes data
 const floatingWishes = [
@@ -13,6 +15,9 @@ const floatingWishes = [
   { id: 5, text: "To wake up next to you every morning", x: 20, y: 80, delay: 4 },
   { id: 6, text: "To dance in the kitchen while cooking together", x: 60, y: 15, delay: 5 },
   { id: 7, text: "To grow old and wrinkled together, still holding hands", x: 40, y: 40, delay: 6 },
+  { id: 8, text: "Savoring every bite of your handmade tacos", x: 50, y: 85, delay: 7 },
+  { id: 9, text: "Warming my soul with a cup of your special chai", x: 85, y: 50, delay: 8 },
+  { id: 10, text: "Learning to dance with you as my hot teacher", x: 5, y: 50, delay: 9 },
 ];
 
 // Constellation dreams
@@ -60,6 +65,22 @@ const visionBoardItems = [
   { id: 4, title: "Growing Together", image: "🌱", description: "Supporting each other's dreams" },
   { id: 5, title: "Dance Lessons", image: "💃", description: "Learning to waltz under the stars" },
   { id: 6, title: "Morning Coffee", image: "☕", description: "Starting every day together" },
+];
+
+// Messages for 365 Days of Us
+const dailyMessages = [
+  "Every day with you is a gift I treasure.",
+  "Thinking of you makes my day brighter.",
+  "You are the reason for my smile, today and always.",
+  "My favorite part of the day is any moment spent with you.",
+  "Just a reminder that I love you more than words can say.",
+  "I'm so grateful for another day to love you.",
+  "You're my sunshine on a cloudy day.",
+  "My love for you grows stronger with each passing day.",
+  "With you, every day feels like a beautiful dream.",
+  "You make ordinary moments extraordinary.",
+  "I fall for you more and more each day.",
+  "My heart is, and always will be, yours."
 ];
 
 // Quiz questions about him for Sana
@@ -112,12 +133,25 @@ const quizQuestions = [
 
 // Shooting star component
 function ShootingStar({ delay }: { delay: number }) {
+  const [windowWidth, setWindowWidth] = useState(1200); // Default fallback
+
+  useEffect(() => {
+    // Set initial window width
+    setWindowWidth(window.innerWidth);
+    
+    // Handle window resize
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <motion.div
       className="absolute w-1 h-1 bg-yellow-300 rounded-full"
       initial={{ x: -100, y: Math.random() * 400, opacity: 0 }}
       animate={{
-        x: window.innerWidth + 100,
+        x: windowWidth + 100,
         y: Math.random() * 400 + 200,
         opacity: [0, 1, 1, 0],
       }}
@@ -212,6 +246,160 @@ function Constellation({ constellation, isActive, onClick }: { constellation: an
           ))}
         </motion.div>
       )}
+    </div>
+  );
+}
+
+// Celestial Calendar component
+function CelestialCalendar() {
+  const [message, setMessage] = useState("");
+  const [day, setDay] = useState<number | null>(null);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    initParticlesEngine(async (engine) => {
+      await loadStarsPreset(engine);
+    }).then(() => {
+      setInit(true);
+    });
+  }, []);
+
+  const pickRandomDay = () => {
+    const randomDay = Math.floor(Math.random() * 365) + 1;
+    const randomMessageIndex = Math.floor(Math.random() * dailyMessages.length);
+    setDay(randomDay);
+    setMessage(dailyMessages[randomMessageIndex]);
+    setIsRevealed(true);
+  };
+
+  const particlesOptions = {
+    preset: "stars",
+    background: {
+      color: {
+        value: 'transparent'
+      }
+    },
+    particles: {
+      number: {
+        value: 100,
+        density: {
+          enable: true,
+        }
+      },
+      color: {
+        value: "#ffffff"
+      },
+      opacity: {
+        value: {min: 0.3, max: 0.8},
+        animation: {
+          enable: true,
+          speed: 1,
+          sync: false
+        }
+      },
+      size: {
+        value: {min: 1, max: 3}
+      },
+    }
+  };
+
+  const AnimatedText = ({ text }: { text: string }) => {
+    const letters = Array.from(text);
+    const container = {
+      hidden: { opacity: 0 },
+      visible: (i = 1) => ({
+        opacity: 1,
+        transition: { staggerChildren: 0.04, delayChildren: 0.2 * i },
+      }),
+    };
+    const child = {
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          type: "spring",
+          damping: 12,
+          stiffness: 100,
+        },
+      },
+      hidden: {
+        opacity: 0,
+        y: 20,
+        transition: {
+          type: "spring",
+          damping: 12,
+          stiffness: 100,
+        },
+      },
+    };
+
+    return (
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-wrap justify-center"
+      >
+        {letters.map((letter, index) => (
+          <motion.span key={index} variants={child} className="text-lg text-white font-serif italic">
+            {letter === " " ? "\u00A0" : letter}
+          </motion.span>
+        ))}
+      </motion.div>
+    );
+  };
+
+  return (
+    <div className="relative backdrop-blur-sm border border-purple-700/50 rounded-2xl p-8 text-center max-w-2xl mx-auto my-20 overflow-hidden bg-black/20">
+      {init && <Particles id="tsparticles" options={particlesOptions} />}
+      <div className="relative z-10">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "backOut" }}
+        >
+          <CalendarDays className="mx-auto h-16 w-16 text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-pink-500" />
+          <h3 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400 my-4">
+            Our Celestial Calendar
+          </h3>
+          <p className="text-purple-200 mb-8">
+            Each star holds a memory, each day a new reason to love you. Choose a day from our cosmos.
+          </p>
+        </motion.div>
+
+        {!isRevealed ? (
+          <motion.button
+            onClick={pickRandomDay}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-10 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-110 shadow-lg shadow-purple-500/40"
+            whileHover={{
+              boxShadow: "0 0 25px rgba(224, 102, 255, 0.6)",
+            }}
+          >
+            <Sparkles className="inline-block mr-2 -mt-1" size={22} />
+            Reveal a Cosmic Memory
+          </motion.button>
+        ) : (
+          <motion.div
+            key={day}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-8 bg-black/40 p-6 rounded-lg border border-purple-500/50 min-h-[120px] flex flex-col justify-center"
+          >
+            <p className="text-purple-300 font-semibold mb-3">A message from Day {day}:</p>
+            <AnimatedText text={`"${message}"`} />
+            <motion.button
+              onClick={() => setIsRevealed(false)}
+              className="mt-6 mx-auto px-5 py-2 text-sm bg-gray-700/80 hover:bg-gray-600/80 text-white rounded-full transition-colors"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+            >
+              Choose another day
+            </motion.button>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
@@ -476,6 +664,15 @@ export default function DreamsPage() {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* 365 Days of Us */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <CelestialCalendar />
         </motion.div>
 
         {/* Quiz Section */}

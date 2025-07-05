@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SanaChat from './SanaChat';
 
+
 const SanaChatButton = () => {
   const [showChat, setShowChat] = useState(false);
 
@@ -90,6 +91,8 @@ const SanaChatButton = () => {
           />
         ))}
       </motion.div>
+
+
 
       {/* Chat Component */}
       <SanaChat isOpen={showChat} onClose={() => setShowChat(false)} />

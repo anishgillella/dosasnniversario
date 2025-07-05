@@ -17,7 +17,7 @@ interface SanaChatProps {
 const SanaChat = ({ isOpen, onClose }: SanaChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     { 
-      text: "Areh aap! 💕 Missing me already, hai na? Dekho, I'm always here for you, bilkul like SRK's promise in every movie! Kya baat hai, what's on your mind? 🎬✨", 
+      text: "Areh aap! 💕 Missing me already, hai na? Dekho, I&apos;m always here for you, bilkul like SRK&apos;s promise in every movie! Kya baat hai, what&apos;s on your mind? 🎬✨", 
       isUser: false, 
       timestamp: new Date() 
     }
@@ -64,7 +64,7 @@ const SanaChat = ({ isOpen, onClose }: SanaChatProps) => {
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, {
-        text: "Areh yaar, something went wrong! 😭 Just like when hero can't reach heroine in climax scene! Aap try again na?",
+        text: "Areh yaar, something went wrong! 😭 Just like when hero can&apos;t reach heroine in climax scene! Aap try again na?",
         isUser: false,
         timestamp: new Date()
       }]);

@@ -2,11 +2,12 @@ import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { FloatingNav } from '@/components/ui/floating-navbar';
+import AuthGate from '@/components/AuthGate';
 import { 
   Home,
-  Clock,
   Camera,
-  Moon
+  Moon,
+  Music
 } from 'lucide-react';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -23,11 +24,6 @@ const navItems = [
     icon: <Home className="h-4 w-4" />,
   },
   {
-    name: "Our Timeline",
-    link: "/timeline",
-    icon: <Clock className="h-4 w-4" />,
-  },
-  {
     name: "Gallery",
     link: "/gallery",
     icon: <Camera className="h-4 w-4" />,
@@ -36,6 +32,11 @@ const navItems = [
     name: "Dreams & Wishes",
     link: "/dreams",
     icon: <Moon className="h-4 w-4" />,
+  },
+  {
+    name: "Music for You",
+    link: "/music",
+    icon: <Music className="h-4 w-4" />,
   },
 ];
 
@@ -47,10 +48,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FloatingNav navItems={navItems} />
-        <div className="relative z-10">
-          {children}
-        </div>
+        <AuthGate>
+          <FloatingNav navItems={navItems} />
+          <div className="relative z-10">
+            {children}
+          </div>
+        </AuthGate>
       </body>
     </html>
   );

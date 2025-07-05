@@ -18,4 +18,8 @@ echo "🌐 Deploying to Netlify..."
 netlify deploy --prod
 
 echo "💖 Deployment complete! Your anniversary website is now live."
+echo "🔐 Access is restricted to:"
+echo "   - anishgillella@gmail.com"
+echo "   - sana.dharani13@gmail.com"
+echo "   - Password: Gillellaanish@123"
 echo "Share the URL with your loved one to celebrate your special day!"
