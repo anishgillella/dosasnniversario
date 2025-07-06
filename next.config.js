@@ -8,7 +8,7 @@ const nextConfig = {
   // Enable static export for GitHub Pages compatibility
   output: process.env.EXPORT_MODE === 'true' ? 'export' : undefined,
   trailingSlash: true,
-  basePath: process.env.EXPORT_MODE === 'true' ? '/anniversary-website' : '',
+  basePath: process.env.EXPORT_MODE === 'true' ? '/dosasnniversario' : '',
 };
 
 module.exports = nextConfig;

@@ -7,14 +7,14 @@ interface AuthGateProps {
   children: React.ReactNode;
 }
 
-const ALLOWED_EMAILS = ['anishgillella@gmail.com', 'sana.dharani13@gmail.com'];
-const VALID_PASSWORD = 'Gillellaanish@123';
+const ALLOWED_EMAILS = process.env.NEXT_PUBLIC_ALLOWED_EMAILS?.split(',') || [];
+const VALID_PASSWORD = process.env.NEXT_PUBLIC_VALID_PASSWORD || '';
 
 export default function AuthGate({ children }: AuthGateProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
